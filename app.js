@@ -37,16 +37,6 @@ window.addEventListener('DOMContentLoaded', async () =>
         e.preventDefault();
 
         navigate(navLink.getAttribute('href'));
-        
-        if(navLink.getAttribute('href') === path())
-        {
-            navLink.setAttribute('data-active', '');
-        }
-        else
-        {
-            navLink.removeAttribute('data-active');
-            console.log(navLink)
-        }
     }));
     
     navigate('/');
