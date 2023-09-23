@@ -40,7 +40,7 @@ window.addEventListener('DOMContentLoaded', async () =>
     }));
     
     navigate('/');
-})
+});
 
 async function navigate(path)
 {
