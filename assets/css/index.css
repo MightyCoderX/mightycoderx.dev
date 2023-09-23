@@ -26,11 +26,11 @@ html, body
 body
 {
     width: 100%;
-    min-height: 100dvh;
+    height: 100dvh;
     background-color: var(--background-color);
     display: grid;
-    grid-template-rows: 80px 1fr 80px;
-    color: var(--text-primary)
+    grid-template-rows: 80px 1fr max-content;
+    color: var(--text-primary);
 }
 
 h1, h2, h3, h4
@@ -55,13 +55,15 @@ a
 
 main
 {
-    padding: 32px;
+    padding: 0 32px;
     
     & p
     {
         letter-spacing: 0.02rem;
         line-height: 1.5;
     }
+
+    overflow-y: auto;
 }
 
 footer
@@ -69,4 +71,19 @@ footer
     display: block;
     height: 100%;
     text-align: center;
+    padding-inline: 32px;
+
+    & hr
+    {
+        border-color: var(--text-secondary);
+        opacity: 0.2;
+        border-radius: 100%;
+    }
+
+    & p
+    {
+        font-size: small;
+        margin: 0;
+        padding: 25px 0 32px 0;
+    }
 }
