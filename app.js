@@ -23,6 +23,15 @@ const pages = {
 
 const path = () => location.hash.replace('#', '');
 
+
+window.addEventListener('loadstart', async () =>
+{
+    for(const [route, page] of Object.entries(pages))
+    {
+        page.content = await (await fetch(`/pages/${page?.filename ?? route + '.html'}`)).text();
+    }
+});
+
 window.addEventListener('DOMContentLoaded', async () =>
 {
     const btnToggleMenu = document.getElementById('btnToggleMenu');
@@ -69,5 +78,5 @@ async function loadPage()
 
     const filePath = page?.filename ? `/pages/${page.filename}` : `/pages${path()}.html`;
 
-    main.innerHTML = await (await fetch(filePath)).text();
+    main.innerHTML = page?.content ?? await (await fetch(filePath)).text();
 }

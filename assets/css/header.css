@@ -63,8 +63,6 @@ header
             }
         }
 
-
-
         .btn-toggle-menu
         {
             padding: 0;
@@ -72,6 +70,7 @@ header
             height: 48px;
             background: none;
             border: none;
+            cursor: pointer;
 
             .menu-icon
             {
