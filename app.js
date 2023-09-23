@@ -23,17 +23,21 @@ const pages = {
 
 const path = () => location.hash.replace('#', '');
 
-
-window.addEventListener('loadstart', async () =>
+async function preloadPages()
 {
     for(const [route, page] of Object.entries(pages))
     {
         page.content = await (await fetch(`/pages/${page?.filename ?? route + '.html'}`)).text();
     }
-});
+
+    console.log('pages loaded', pages);
+}
+
 
 window.addEventListener('DOMContentLoaded', async () =>
 {
+    await preloadPages();
+
     const btnToggleMenu = document.getElementById('btnToggleMenu');
     const menuNav = document.getElementById('menuNav');
 
