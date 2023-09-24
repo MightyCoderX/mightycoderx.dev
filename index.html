@@ -5,6 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <base target="_blank">
 
+        <link rel="preload" href="assets/css/header.css" as="style">
+
         <title>MightyCoderX</title>
         <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
 
@@ -16,23 +18,32 @@
         <header>
             <a class="logo" data-route-link href="/">MCX</a>
             <nav id="menuNav">
-                <button id="btnToggleMenu" class="btn-toggle-menu">
-                    <div class="menu-icon">
-                        <div class="line"></div>
-                    </div>
-                </button>
                 <ul >
                     <li><a href="/" data-route-link>Home</a></li>
                     <li><a href="/skills" data-route-link>Skills</a></li>
                     <li><a href="/projects" data-route-link>Projects</a></li>
                     <li><a href="/contacts" data-route-link>Contacts</a></li>
                 </ul>
+                <button id="btnToggleMenu" class="btn-toggle-menu">
+                    <div class="menu-icon">
+                        <div class="line"></div>
+                    </div>
+                </button>
             </nav>
         </header>
 
         <main>
-            Loading...
-            <!-- TODO Improve loading animation 😅 -->
+            <div class="skeleton">
+                <h2 class="skeleton-title">Title</h2>
+                <div class="skeleton-paragraph">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+            </div>
         </main>
         
         <footer>
