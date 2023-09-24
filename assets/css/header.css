@@ -60,7 +60,7 @@ header
                 align-items: center;
                 text-decoration: none;
                 color: var(--text-secondary);
-                padding-block: 16px;
+                padding-inline: 16px;
                 transition: 0.2s color ease;
                 width: 100%;
 
