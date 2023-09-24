@@ -43,7 +43,7 @@ window.addEventListener('DOMContentLoaded', async () =>
 
     btnToggleMenu.addEventListener('click', () => menuNav.classList.toggle('shown'));
 
-    const navLinks = document.querySelectorAll('a[data-nav-link]');
+    const navLinks = document.querySelectorAll('a[data-route-link]');
 
     navLinks.forEach(navLink => navLink.addEventListener('click', e =>
     {
@@ -59,7 +59,7 @@ async function navigate(path)
 {
     history.pushState({}, '', `/#${path}`);
     
-    const navLinks = document.querySelectorAll('a[data-nav-link]');
+    const navLinks = document.querySelectorAll('nav a[data-route-link]');
     navLinks.forEach(navLink => 
     {   
         if(navLink.getAttribute('href') === path)

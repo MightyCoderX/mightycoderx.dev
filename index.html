@@ -3,7 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
+        <base target="_blank">
+
         <title>MightyCoderX</title>
         <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
 
@@ -13,7 +14,7 @@
     </head>
     <body>
         <header>
-            <span class="logo">MCX</span>
+            <a class="logo" data-route-link href="/">MCX</a>
             <nav id="menuNav">
                 <button id="btnToggleMenu" class="btn-toggle-menu">
                     <div class="menu-icon">
@@ -21,10 +22,10 @@
                     </div>
                 </button>
                 <ul >
-                    <li><a href="/" data-nav-link>Home</a></li>
-                    <li><a href="/skills" data-nav-link>Skills</a></li>
-                    <li><a href="/projects" data-nav-link>Projects</a></li>
-                    <li><a href="/contacts" data-nav-link>Contacts</a></li>
+                    <li><a href="/" data-route-link>Home</a></li>
+                    <li><a href="/skills" data-route-link>Skills</a></li>
+                    <li><a href="/projects" data-route-link>Projects</a></li>
+                    <li><a href="/contacts" data-route-link>Contacts</a></li>
                 </ul>
             </nav>
         </header>
@@ -41,7 +42,7 @@
                 <span class="accent">HTML</span>, 
                 <span class="accent">CSS</span> & 
                 <span class="accent" style="font-weight: bold;">JS</span>
-                by <span class="accent">MightyCoderX</span> &COPY; 2023
+                by <a href="https://github.com/MightyCoderX">MightyCoderX</a> &COPY; 2023
             </p>
         </footer>
     </body>

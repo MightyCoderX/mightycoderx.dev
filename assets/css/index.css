@@ -46,6 +46,7 @@ p, span
 a
 {
     color: var(--accent);
+    cursor: pointer;
 }
 
 .accent
