@@ -1,4 +1,4 @@
-const pages = {
+const routes = {
     '/':
     {
         title: 'Home',
@@ -18,30 +18,51 @@ const pages = {
     '/contacts':
     {
         title: 'Contacts'
+    },
+
+    '/404':
+    {
+        title: 'Not Found'
     }
 };
 
+if(!location.hash.startsWith('#/'))
+{
+    navigate('/');
+}
+
 const path = () => location.hash.replace('#', '');
+const currentRoute = () => routes[path()] ?? routes['/404'];
 
 async function preloadPages()
 {
-    for(const [route, page] of Object.entries(pages))
+    for(const [route, page] of Object.entries(routes))
     {
         page.content = await (await fetch(`/pages/${page?.filename ?? route + '.html'}`)).text();
     }
 
-    console.log('pages loaded', pages);
+    console.log('pages loaded', routes);
 }
 
 
 window.addEventListener('DOMContentLoaded', async () =>
 {
     await preloadPages();
+    
+    window.addEventListener('popstate', () =>
+    {
+        if(!location.hash.startsWith('#/'))
+        {
+            navigate('/');
+        }
 
+        loadPage();
+    });
+    
     const btnToggleMenu = document.getElementById('btnToggleMenu');
     const menuNav = document.getElementById('menuNav');
 
-    btnToggleMenu.addEventListener('click', () => menuNav.classList.toggle('shown'));
+    btnToggleMenu.addEventListener('click', () => menuNav.classList.toggle('shown')); 
 
     const navLinks = document.querySelectorAll('a[data-route-link]');
 
@@ -52,16 +73,18 @@ window.addEventListener('DOMContentLoaded', async () =>
         navigate(navLink.getAttribute('href'));
     }));
     
-    navigate('/');
+    navigate(path());
 });
 
 async function navigate(path)
 {
     history.pushState({}, '', `/#${path}`);
-    
+
+    document.title = currentRoute()?.title;
+
     const navLinks = document.querySelectorAll('nav a[data-route-link]');
     navLinks.forEach(navLink => 
-    {   
+    {
         if(navLink.getAttribute('href') === path)
         {
             navLink.setAttribute('data-active', '');
@@ -78,9 +101,9 @@ async function navigate(path)
 async function loadPage()
 {
     const main = document.querySelector('main');
-    const page = pages[path()];
+    const route = currentRoute();
 
-    const filePath = page?.filename ? `/pages/${page.filename}` : `/pages${path()}.html`;
+    const filePath = route.filename ? `/pages/${route.filename}` : `/pages${path()}.html`;
 
-    main.innerHTML = page?.content ?? await (await fetch(filePath)).text();
+    main.innerHTML = route.content ?? await (await fetch(filePath)).text();
 }
