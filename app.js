@@ -26,13 +26,13 @@ const routes = {
     }
 };
 
+const path = () => location.hash.replace('#', '');
+const currentRoute = () => routes[path()] ?? routes['/404'];
+
 if(!location.hash.startsWith('#/'))
 {
     navigate('/');
 }
-
-const path = () => location.hash.replace('#', '');
-const currentRoute = () => routes[path()] ?? routes['/404'];
 
 async function preloadPages()
 {
@@ -41,7 +41,7 @@ async function preloadPages()
         page.content = await (await fetch(`/pages/${page?.filename ?? route + '.html'}`)).text();
     }
 
-    console.log('pages loaded', routes);
+    // console.log('pages loaded', routes);
 }
 
 
