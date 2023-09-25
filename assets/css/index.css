@@ -14,7 +14,7 @@
     --background-color: hsl(224, 29%, 10%);
     --accent: hsl(34, 85%, 50%);
     --text-primary: hsl(34, 20%, 70%);
-    --text-secondary: hsla(34, 30%, 70%, 0.45);
+    --text-secondary: hsla(34, 30%, 70%, 0.60);
 }
 
 html, body
