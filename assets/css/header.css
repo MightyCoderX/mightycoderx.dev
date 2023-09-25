@@ -38,6 +38,7 @@ header
             width: 100%;
             height: 0;
             visibility: hidden;
+            margin-bottom: 0;
 
             & li
             {
@@ -163,6 +164,7 @@ header
         {
             visibility: visible;
             height: max-content;
+            margin-bottom: 8px;
 
             @media screen and (min-width: 750px)
             {
@@ -196,7 +198,6 @@ header
                 {
                     rotate: -45deg;
                 }
-
             }
         }
     }
