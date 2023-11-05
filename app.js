@@ -7,7 +7,8 @@ const routes = {
 
     '/skills':
     {
-        title: 'Skills'
+        title: 'Skills',
+        jsModule: true
     },
 
     '/projects':
@@ -36,9 +37,10 @@ if(!location.hash.startsWith('#/'))
 
 async function preloadPages()
 {
+    const parser = new DOMParser();
     for(const [route, page] of Object.entries(routes))
     {
-        page.content = await (await fetch(`/pages/${page?.filename ?? route + '.html'}`)).text();
+        page.content = parser.parseFromString(await (await fetch(`/pages/${page?.filename ?? route + '.html'}`)).text(), 'text/html');
     }
 
     // console.log('pages loaded', routes);
@@ -105,5 +107,13 @@ async function loadPage()
 
     const filePath = route.filename ? `/pages/${route.filename}` : `/pages${path()}.html`;
 
-    main.innerHTML = route.content ?? await (await fetch(filePath)).text();
+    main.innerHTML = route.content.innerHTML ?? await (await fetch(filePath)).text();
+
+    if(route.jsModule)
+    {
+        const module = await import(`/assets/js${route.filename ? '/' + route.filename.replace('.html', '') : path()}.js`);
+
+        module?.init?.(route.content);
+    }
+  
 }
