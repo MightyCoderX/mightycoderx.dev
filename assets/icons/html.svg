@@ -1,0 +1,18 @@
+<svg width="398" height="416" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="400" height="418" id="canvas_background" fill="none"/>
+ </g>
+ <defs>
+  <filter height="200%" width="200%" y="-50%" x="-50%" id="svg_4_blur">
+   <feGaussianBlur stdDeviation="0" in="SourceGraphic"/>
+  </filter>
+ </defs>
+ <g>
+  <title>Layer 1</title>
+  <path filter="url(#svg_4_blur)" fill="#e44d26" d="m51.6,373.250009l-33,-370.4l362.8,0l-33,370.2l-148.7,41.2" id="svg_1"/>
+  <path filter="url(#svg_4_blur)" fill="#f16529" d="m200,383.300005l0,-349.5l148.3,0l-28.3,316" id="svg_2"/>
+  <path filter="url(#svg_4_blur)" fill="#ebebeb" d="m86,79.900009l114,0l0,45.4l-64.2,0l4.2,46.5l60,0l0,45.3l-101.6,0m2,22.8l45.6,0l3.2,36.3l50.8,13.6l0,47.4l-93.2,-26" id="svg_3"/>
+  <path filter="url(#svg_4_blur)" fill="#fff" d="m313.6,80l-113.8,0l0,45.4l109.6,0m-4.1,46.5l-105.5,0l0,45.4l56,0l-5.3,59l-50.7,13.6l0,47.2l93,-25.8" id="svg_4"/>
+ </g>
+</svg>
