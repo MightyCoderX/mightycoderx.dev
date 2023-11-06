@@ -107,7 +107,7 @@ async function loadPage()
 
     const filePath = route.filename ? `/pages/${route.filename}` : `/pages${path()}.html`;
 
-    main.innerHTML = route.content.innerHTML ?? await (await fetch(filePath)).text();
+    main.innerHTML = route?.content?.innerHTML ?? await (await fetch(filePath)).text();
 
     if(route.jsModule)
     {
