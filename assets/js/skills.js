@@ -15,5 +15,4 @@ export function init(content)
     {
         divSkills.append(new SkillCard(skill));
     });
-
 }
