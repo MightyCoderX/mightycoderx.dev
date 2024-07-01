@@ -18,7 +18,8 @@ const routes = {
 
     '/contacts':
     {
-        title: 'Contacts'
+        title: 'Contacts',
+        jsModule: true
     },
 
     '/404':
@@ -115,5 +116,4 @@ async function loadPage()
 
         module?.init?.(route.content);
     }
-  
 }
