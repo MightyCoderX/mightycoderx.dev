@@ -1,0 +1,203 @@
+@import url(variables.css);
+
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    user-select: none;
+}
+
+html, body
+{
+    background: var(--bg-color);
+    color: white;
+    overflow: hidden;
+    width: 100%;
+    height: 100vh;
+    -moz-font-smoothing: grayscale;
+}
+
+/* find a way to do this inside custom element */
+/* context-menu
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+} */
+
+span[class^="material-icons"]
+{
+    display: block;
+    line-height: 1;
+}
+
+.desktop
+{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 64px);
+    grid-template-rows: repeat(auto-fit, 84px);
+    height: 100vh;
+    width: 100vw;
+    gap: 0.5rem;
+    padding: 10px;
+}
+
+.window-overlay
+{
+    position: absolute;
+    inset: 0;
+    bottom: var(--panel-height);
+    pointer-events: none;
+    isolation: isolate;
+    overflow: hidden;
+}
+
+.panel
+{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: var(--panel-height);
+    background: var(--bg-color);
+    backdrop-filter: var(--backdrop);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.panel .start-menu
+{
+    height: 100%;
+    aspect-ratio: 1;
+    margin-right: 10px;
+    display: grid;
+    place-items: center;
+}
+
+.panel .panel-apps
+{
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.panel-right
+{
+    display: flex;
+    align-items: center;
+}
+
+.panel-right #clock
+{
+    background-color: transparent;
+    color: var(--text-color);
+    border: none;
+    outline: none;
+    padding: 0 0.5rem;
+    font-weight: 500;
+    font-family: monospace;
+}
+
+.panel #btnStartMenu
+{
+    height: 100%;
+    aspect-ratio: 1;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    transition-property: background-color, border;
+    transition-duration: 0.1s;
+    display: grid;
+    place-items: center;
+    user-select: none;
+}
+
+.panel #btnStartMenu:focus-visible
+{
+    outline: 2px solid var(--accent-color);
+    outline-offset: -2px;
+}
+
+.panel #btnStartMenu:hover
+{
+    background-color: #fff2;
+}
+
+.panel #btnStartMenu img
+{
+    width: 85%;
+    aspect-ratio: 1;
+    pointer-events: none;
+    user-select: none;
+}
+
+.panel .menu
+{
+    height: 65vh;
+    width: 25vw;
+    min-width: max-content;
+    position: absolute;
+    bottom: var(--panel-height);
+    left: 0;
+    background-color: var(--bg-color);
+    transform-origin: bottom left;
+    scale: 0;
+    opacity: 0;
+    outline: none;
+    transition-property: scale, opacity;
+    transition-duration: 0.2s;
+    display: flex;
+    overflow: hidden;
+}
+
+.panel .menu aside
+{
+    width: max-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.panel .menu aside button
+{
+    width: 35px;
+    aspect-ratio: 1;
+    background-color: transparent;
+    color: white;
+    border: none;
+    display: grid;
+    place-items: center;
+}
+
+.panel .menu aside button:hover
+{
+    background-color: #fff2;
+}
+
+.panel .menu aside button span
+{
+    font-size: 20px;
+}
+
+.panel .menu .app-list
+{
+    width: 100%;
+    overflow: auto;
+}
+
+.panel .menu.show
+{
+    scale: 1;
+    opacity: 1;
+}
+
+.panel panel-icon
+{
+    width: var(--panel-height);
+    height: var(--panel-height);
+    margin-right: 10px;
+    border: none;
+}

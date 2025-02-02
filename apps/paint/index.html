@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Paint</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+        <link rel="stylesheet" href="style.css">
+
+        <script src="app.js" defer></script>
+    </head>
+    <body>
+        <div class="toolbar">
+            <div class="colors">
+                <button class="btn-color" data-color="white"></button>
+                <button class="btn-color" data-color="red"></button>
+                <button class="btn-color" data-color="blue"></button>
+                <button class="btn-color" data-color="rgb(99, 51, 23)"></button>
+                <button class="btn-color" data-color="yellow"></button>
+                <button class="btn-color" data-color="green"></button>
+                <button class="btn-color" data-color="purple"></button>
+            </div>
+            <div class="tools">
+                <input type="color" id="colorPicker">
+                <input type="range" id="sldSize" min="1" max="100" value="4">
+                <input type="number" id="nmbSize" max="100" min="1" step="1" pattern="\d*">
+                <button id="btnPen" class="btn-tool">Pen</button>
+                <button id="btnEraser" class="btn-tool">Eraser</button>
+                <button id="btnCircle" class="btn-tool">Circle</button>
+                <button id="btnClear" class="btn-tool">Clear</button>
+                <button id="btnDownload" class="btn-tool">Download</button>
+            </div>
+        </div>
+        
+    </body>
+</html>

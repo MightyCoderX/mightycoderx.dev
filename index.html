@@ -2,65 +2,47 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <base target="_blank">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        
+        <link rel="icon" href="./favicon.png">
+        <title>MightyOS</title>
 
-        <link rel="preload" href="assets/css/index.css" as="style">
-        <link rel="preload" href="assets/css/header.css" as="style">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-        <title>MightyCoderX</title>
-        <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
-        <meta name="description" content="Developer & Tech Enthusiast portfolio">
-        <link rel="me" href="https://mastodon.social/@MightyCoderX">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Round">
+        <link rel="stylesheet" href="css/style.css">
 
-        <link rel="stylesheet" href="/assets/css/index.css">
-        <link rel="stylesheet" href="/assets/css/home.css">
-        <link rel="stylesheet" href="/assets/css/skills.css">
-        <link rel="stylesheet" href="/assets/css/contacts.css">
-
-        <script src="app.js" type="module"></script>
+        <script src="main.js" defer type="module"></script>
+        <script src="components/ConsoleContext.js" defer></script>
     </head>
     <body>
-        <header>
-            <a class="logo" data-route-link href="/">MCX</a>
-            <nav id="menuNav">
-                <button id="btnToggleMenu" class="btn-toggle-menu" title="Navigation Menu">
-                    <div class="menu-icon">
-                        <div class="line"></div>
+        <div class="desktop"></div>
+        <div class="window-overlay"></div>
+        <!-- TODO make panel a web component -->
+        <div class="panel">
+            <div class="start-menu">
+                <button id="btnStartMenu"><img src="start_menu_icon.svg" alt="Menu"></button>
+                <div class="menu" tabindex="-1">
+                    <aside>
+                        <button id="btnShutdown" title="Shutdown">
+                            <span class="material-icons-round">power_settings_new</span>
+                        </button>
+                        <button id="btnRestart" title="Restart">
+                            <span class="material-icons-round">restart_alt</span>
+                        </button>
+                    </aside>
+                    <div class="app-list">
+                        <!-- <h3>Applications</h3> -->
                     </div>
-                </button>
-                <ul >
-                    <li><a draggable="false" href="/" data-route-link>Home</a></li>
-                    <li><a draggable="false" href="/skills" data-route-link>Skills</a></li>
-                    <li><a draggable="false" href="/projects" data-route-link>Projects</a></li>
-                    <li><a draggable="false" href="/contacts" data-route-link>Contacts</a></li>
-                </ul>
-            </nav>
-        </header>
-
-        <main>
-            <div class="skeleton">
-                <h2 class="skeleton-title">Title</h2>
-                <div class="skeleton-paragraph">
-                    <div class="line"></div>
-                    <div class="line"></div>
-                    <div class="line"></div>
-                    <div class="line"></div>
-                    <div class="line"></div>
-                    <div class="line"></div>
                 </div>
             </div>
-        </main>
-        
-        <footer>
-            <hr>
-            <p>
-                Made with just 
-                <span class="accent">HTML</span>, 
-                <span class="accent">CSS</span> & 
-                <span class="accent" style="font-weight: bold;">JS</span>
-                by <a href="https://github.com/MightyCoderX">MightyCoderX</a> &COPY; 2023
-            </p>
-        </footer>
+            <div class="panel-apps"></div>
+            <div class="panel-right">
+                <button id="clock"></button>
+            </div>
+        </div>
     </body>
 </html>

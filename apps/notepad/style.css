@@ -1,0 +1,50 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body, html
+{
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+}
+
+.btn-floating
+{
+    position: fixed;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: #222;
+    color: #ddd;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 100vh;
+}
+
+.btn-floating:hover
+{
+    background-color: #fff2;
+}
+
+.btn-floating span
+{
+    line-height: 1;
+    display: block;
+}
+
+.editor
+{
+    width: 100%;
+    height: 100%;
+    outline: none;
+    background-color: transparent;
+    border: none;
+    color: white;
+    padding: 8px;
+    font-size: 15px;
+    resize: none;
+}

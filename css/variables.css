@@ -1,0 +1,11 @@
+:root
+{
+    --bg-color: #111;
+    --bg-color-alpha: #111a;
+    --bg-color-2: #181818;
+    --bg-color-2-alpha: #181818aa;
+    --text-color: #eee;
+    --accent-color: #0aa;
+    --panel-height: 35px;
+    --backdrop: blur(15px);
+}
