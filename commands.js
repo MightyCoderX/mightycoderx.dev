@@ -67,7 +67,7 @@ export function cd(args) {
         return;
     }
     const obj = getFsObjectByName(args[0]);
-    if(!obj) return;
+    if (!obj) return;
 
     if (isDirectory(obj)) {
         state.workdir = args[0];
