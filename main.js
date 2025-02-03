@@ -231,8 +231,8 @@ function tabComplete(line, cursorPos) {
     if (options.length == 1) {
         document.execCommand("insertText", false, options[0].slice(arg.length) + " ");
     }
-    else {
-        echo(JSON.stringify(options) + "\n")
+    else if (options.length > 1) {
+        commands.echo.run(options);
     }
 
     focusAndMoveCursorToTheEnd();
