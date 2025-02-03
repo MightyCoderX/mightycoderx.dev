@@ -116,7 +116,7 @@ export const commands = {
                 state.history = [];
             }
             else {
-                echo(JSON.stringify(state.history) + "\n");
+                commands.echo.run(state.history.join("\n"));
             }
         }
     },

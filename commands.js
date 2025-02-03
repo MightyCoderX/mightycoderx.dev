@@ -25,7 +25,7 @@ export function isDirectory(obj) {
 function getFsObjectByName(name) {
     const match = state.workdir.contents.find(obj => obj.name === name);
     if (!match) {
-        echo(`error: '${name}' no such file or directory\n`);
+        commands.echo.run(`error: '${name}' no such file or directory`);
         return null;
     }
 
@@ -37,10 +37,10 @@ export function ls(args) {
 
     if (args.length == 1) {
         const obj = getFsObjectByName(args[0]);
-        if(!obj) return;
-        
-        if(!isDirectory(obj)) {
-            echo(`${obj.name}\n`);
+        if (!obj) return;
+
+        if (!isDirectory(obj)) {
+            commands.echo.run(`${obj.name}`);
             return;
         }
 
@@ -48,7 +48,7 @@ export function ls(args) {
     }
 
     for (const obj of contents) {
-        echo(`${obj.name}${isDirectory(obj) ? '/' : ''}\n`);
+        commands.echo.run(`${obj.name}${isDirectory(obj) ? '/' : ''}`);
     }
 }
 
@@ -64,26 +64,26 @@ export function cd(args) {
         state.workdir = args[0];
     }
     else {
-        echo(`cd: cannot cd into a file\n`);
+        commands.echo.run(`cd: cannot cd into a file`);
     }
 }
 
 export function cat(args) {
     if (args.length == 0) {
-        echo("usage: cat <filename>\n");
+        commands.echo.run("usage: cat <filename>");
         return;
     }
 
     const obj = getFsObjectByName(args[0]);
     if (!isDirectory(obj)) {
-        echo(obj.contents + "\n");
+        commands.echo.run(obj.contents);
     }
     else {
-        echo(`error: '${obj.name}' is a directory\n`);
+        commands.echo.run(`error: '${obj.name}' is a directory`);
     }
 }
 
 export function tree(args) {
-    echo(JSON.stringify(fs, null, "    ") + "\n");
+    commands.echo.run(JSON.stringify(fs, null, "    "));
 }
 
