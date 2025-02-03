@@ -2,11 +2,20 @@ import { fs, state, terminalElem, commands, echo } from "./main.js";
 
 export function help(args) {
     let helpMessage = "";
-
-    for (const command in commands) {
-        helpMessage += `${command}\t${commands[command].usage}\n`;
+    if (args.length == 0) {
+        for (const command in commands) {
+            helpMessage += `${command} ${commands[command]?.usage}\n`;
+        }
     }
-
+    else if (args.length == 1) {
+        if(commands[args[0]]) {
+            helpMessage = `usage: ${args[0]} ${commands[args[0]]?.usage}\n`;
+        }
+        else {
+            commands.echo.run(`error: command '${args[0]}' found`);
+            return;
+        }
+    }
     terminalElem.append(helpMessage);
 }
 
