@@ -175,6 +175,7 @@ function runCommand(line) {
         echo(`error: command '${cmdName}' not found\n`);
     }
 
+    lineEditorElem.scrollIntoView(false);
     state.prompt = state.prompt;
     state.historyIndex = history.length;
     localStorage.setItem("history", JSON.stringify(state.history));
@@ -278,7 +279,6 @@ lineEditorElem.addEventListener("keydown", e => {
                 break;
         }
     }
-
 });
 
 lineEditorElem.addEventListener("keyup", e => {
