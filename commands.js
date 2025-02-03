@@ -4,10 +4,10 @@ export function help(args) {
     let helpMessage = "";
 
     for (const command in commands) {
-        helpMessage += escape(`${command}\t${commands[command].usage}\n`);
+        helpMessage += `${command}\t${commands[command].usage}\n`;
     }
 
-    echo(helpMessage);
+    terminalElem.append(helpMessage);
 }
 
 export function clear() {
