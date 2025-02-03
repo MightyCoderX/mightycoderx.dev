@@ -285,9 +285,5 @@ lineEditorElem.addEventListener("keyup", e => {
     if (e.key == "Enter") {
         e.preventDefault();
     }
-
-    if (e.key == "Tab") {
-        e.preventDefault();
-    }
 });
 
