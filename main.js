@@ -39,6 +39,8 @@ export const fs = {
 
 export const state = {
     _workdir: fs,
+    _history: JSON.parse(localStorage.getItem("history")) ?? [],
+    _historyIndex: -1,
     get workdir() {
         return this._workdir;
     },
@@ -48,43 +50,83 @@ export const state = {
         }
         this._workdir = this._workdir.contents.find(obj => obj.name === dir && isDirectory(obj)) ?? this._workdir;
     },
+    get commandLine() {
+        return lineEditorElem.textContent;
+    },
+    set commandLine(cli) {
+        lineEditorElem.innerText = cli;
+    },
+    get history() {
+        return this._history;
+    },
+    set history(array) {
+        this._history = array;
+    },
+    appendHistory(commandLine) {
+        this.history.push(commandLine);
+    },
+    get historyIndex() {
+        return this._historyIndex != -1 ? this._historyIndex : this._history.length;
+    },
+    set historyIndex(index) {
+        this.commandLine = this.history[this.historyIndex] || "";
+        this._historyIndex = index;
+    },
+    set prompt(str) {
+        promptElem.innerHTML = str;
+    },
     get prompt() {
         return `${this.workdir.name} $ `
-    },
-};
-
-/***
- * @type {[{name: string, usage: string}]}
- */
-export const commands = {
-    "help": {
-        usage: "[command]"
-    },
-    "echo": {
-        usage: "[args...]"
-    },
-    "clear": {
-        usage: ""
-    },
-    "history": {
-        usage: ""
-    },
-    "cd": {
-        usage: "[path]"
-    },
-    "ls": {
-        usage: "[path]"
-    },
-    "cat": {
-        usage: "<filename>"
-    },
-    "tree": {
-        usage: "[path]"
     }
 };
 
-export let history = JSON.parse(localStorage.getItem("history")) ?? [];
-export let history_index = history.length;
+/***
+ * @type {{[key]: {name: string, usage: string}}}
+ */
+export const commands = {
+    "help": {
+        usage: "[command]",
+        run: help
+    },
+    "echo": {
+        usage: "[args...]",
+        run(...args) {
+            if(Array.isArray(args[0])) args = args[0];
+            echo(args.join(" ") + "\n");
+        }
+    },
+    "clear": {
+        usage: "",
+        run: clear
+    },
+    "history": {
+        usage: "",
+        run(args) {
+            if (args[0] == "-c") {
+                state.history = [];
+            }
+            else {
+                echo(JSON.stringify(state.history) + "\n");
+            }
+        }
+    },
+    "cd": {
+        usage: "[path]",
+        run: cd
+    },
+    "ls": {
+        usage: "[path]",
+        run: ls
+    },
+    "cat": {
+        usage: "<filename>",
+        run: cat
+    },
+    "tree": {
+        usage: "[path]",
+        run: tree
+    }
+};
 
 /***
  * @param {string} line
@@ -100,55 +142,32 @@ function parseLine(line, trim = false) {
  */
 function runCommand(line) {
     const args = parseLine(line, true);
+    const cmdName = args.shift(); //Remove command name and save
 
     terminalElem.append(state.prompt + line + "\n");
 
     if (line === "") return;
 
-    history.push(line);
+    state.appendHistory(line);
 
-    if (commands[args[0]]) {
-        switch (args[0]) {
-            case "help":
-                help(commands, args.shift());
-                break;
-            case "echo":
-                args.shift();
-                echo(args.join(" ") + "\n");
-                break;
-            case "clear":
-                clear(args.shift());
-                break;
-            case "history":
-                if (args[1] == "-c") {
-                    history = [];
-                    break;
-                }
-                echo(JSON.stringify(history) + "\n");
-                break;
-            case "ls":
-                ls(args.slice(1));
-                break;
-            case "cd":
-                cd(args.slice(1));
-                break;
-            case "cat":
-                cat(args.slice(1));
-                break;
-            case "tree":
-                tree(args.slice());
-                break;
+    if (commands[cmdName]) {
+        try {
+            commands[cmdName].run(args);
         }
+        catch(e) {
+            console.error(e);
+            echo(`shell: error while running command: ${e}\n`);
+        }
+
     }
     else {
-        echo(`error: command '${args[0]}' not found\n`);
+        echo(`error: command '${cmdName}' not found\n`);
     }
 
-    history_index = history.length;
-    localStorage.setItem("history", JSON.stringify(history));
-
-    lineEditorElem.innerHTML = "";
-    promptElem.innerHTML = state.prompt;
+    state.prompt = state.prompt;
+    state.historyIndex = history.length;
+    localStorage.setItem("history", JSON.stringify(state.history));
+    state.commandLine = "";
 }
 
 function focusAndMoveCursorToTheEnd() {
@@ -166,7 +185,6 @@ function focusAndMoveCursorToTheEnd() {
     selection.addRange(range);
 }
 
-/**
  * @param {string} line
  */
 function tabComplete(line, cursorPos) {
@@ -179,7 +197,6 @@ function tabComplete(line, cursorPos) {
     }
     else {
         for (let i = 0; i < cursorPos; i++) {
-            console.log(line.charAt(i), cursorPos);
             if (line.charAt(i) == " ") {
                 argIndex++;
             }
@@ -213,27 +230,25 @@ lineEditorElem.addEventListener("keydown", e => {
     switch (e.key) {
         case "Enter":
             e.preventDefault();
-            runCommand(lineEditorElem.textContent);
+            runCommand(state.commandLine);
             break;
         case "ArrowUp":
             e.preventDefault();
-            if (history_index > 0) {
-                history_index--;
-                lineEditorElem.innerText = history[history_index];
+            if (state.historyIndex > 0) {
+                state.historyIndex--;
                 focusAndMoveCursorToTheEnd();
             }
             break;
         case "ArrowDown":
             e.preventDefault();
-            if (history_index < history.length) {
-                history_index++;
-                lineEditorElem.innerText = history[history_index] || "";
+            if (state.historyIndex < history.length) {
+                state.historyIndex++;
                 focusAndMoveCursorToTheEnd();
             }
             break;
         case "Tab":
             e.preventDefault();
-            tabComplete(lineEditorElem.textContent, document.getSelection().anchorOffset);
+            tabComplete(state.commandLine, document.getSelection().anchorOffset);
             break;
     }
 
