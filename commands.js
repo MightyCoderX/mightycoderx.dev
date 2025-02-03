@@ -84,6 +84,8 @@ export function cat(args) {
     }
 
     const obj = getFsObjectByName(args[0]);
+    if(!obj) return;
+
     if (!isDirectory(obj)) {
         commands.echo.run(obj.contents);
     }
