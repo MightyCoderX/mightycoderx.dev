@@ -1,215 +1,266 @@
-import Application from './components/Application.js';
-import ContextMenu from './components/ContextMenu.js';
-import DesktopIcon from './components/DesktopIcon.js';
-import StartMenuItem from './components/StartMenuItem.js'
+import { help, clear, ls, cd, cat, tree, isDirectory } from "./commands.js";
 
+export const terminalElem = document.getElementById("terminal");
+const cliElem = document.getElementById("cli");
+const promptElem = document.getElementById("prompt");
+const lineEditorElem = document.getElementById("lineEditor");
 
-const btnStartMenu = document.getElementById('btnStartMenu');
-const btnShutdown = document.getElementById('btnShutdown');
-const btnRestart = document.getElementById('btnRestart');
-const menuElem = document.querySelector('.menu');
-const desktop = document.querySelector('.desktop');
-const windowOverlay = document.querySelector('.window-overlay');
-const panelApps = document.querySelector('.panel .panel-apps');
+/***
+ * @param {string} text 
+ */
+export function echo(text) {
+    terminalElem.innerHTML += text;
+}
 
-const btnClock = document.querySelector('.panel .panel-right #clock');
-setInterval(() =>
-{
-    btnClock.innerText = (new Date()).toLocaleTimeString();
-    btnClock.title = (new Date()).toLocaleDateString();
-}, 500);
+document.addEventListener("click", e => lineEditorElem.focus());
+export const fs = {
+    name: "~",
+    contents: [
+        {
+            name: "projects",
+            contents: [
+                {
+                    name: "MightyOS",
+                    contents: "A simple desktop environment <a href='https://os.mightycoderx.dev' target='_blank'>https://os.mightycoderx.dev</a>"
+                }
+            ]
+        },
+        {
+            name: "skills",
+            contents: [
+                {
+                    name: "",
+                    contents: ""
+                }
+            ]
+        }
+    ]
+};
+
+export const state = {
+    _workdir: fs,
+    get workdir() {
+        return this._workdir;
+    },
+    set workdir(dir) {
+        if (dir == "~") {
+            this._workdir = fs;
+        }
+        this._workdir = this._workdir.contents.find(obj => obj.name === dir && isDirectory(obj)) ?? this._workdir;
+    },
+    get prompt() {
+        return `${this.workdir.name} $ `
+    },
+};
+
+/***
+ * @type {[{name: string, usage: string}]}
+ */
+export const commands = {
+    "help": {
+        usage: "[command]"
+    },
+    "echo": {
+        usage: "[args...]"
+    },
+    "clear": {
+        usage: ""
+    },
+    "history": {
+        usage: ""
+    },
+    "cd": {
+        usage: "[path]"
+    },
+    "ls": {
+        usage: "[path]"
+    },
+    "cat": {
+        usage: "<filename>"
+    },
+    "tree": {
+        usage: "[path]"
+    }
+};
+
+export let history = JSON.parse(localStorage.getItem("history")) ?? [];
+export let history_index = history.length;
+
+/***
+ * @param {string} line
+ */
+function parseLine(line, trim = false) {
+    line = trim ? line.trim() : line;
+    const args = line.split(" ");
+
+    return args;
+}
+/***
+ * @param {string} line 
+ */
+function runCommand(line) {
+    const args = parseLine(line, true);
+
+    terminalElem.append(state.prompt + line + "\n");
+
+    if (line === "") return;
+
+    history.push(line);
+
+    if (commands[args[0]]) {
+        switch (args[0]) {
+            case "help":
+                help(commands, args.shift());
+                break;
+            case "echo":
+                args.shift();
+                echo(args.join(" ") + "\n");
+                break;
+            case "clear":
+                clear(args.shift());
+                break;
+            case "history":
+                if (args[1] == "-c") {
+                    history = [];
+                    break;
+                }
+                echo(JSON.stringify(history) + "\n");
+                break;
+            case "ls":
+                ls(args.slice(1));
+                break;
+            case "cd":
+                cd(args.slice(1));
+                break;
+            case "cat":
+                cat(args.slice(1));
+                break;
+            case "tree":
+                tree(args.slice());
+                break;
+        }
+    }
+    else {
+        echo(`error: command '${args[0]}' not found\n`);
+    }
+
+    history_index = history.length;
+    localStorage.setItem("history", JSON.stringify(history));
+
+    lineEditorElem.innerHTML = "";
+    promptElem.innerHTML = state.prompt;
+}
+
+function focusAndMoveCursorToTheEnd() {
+    lineEditorElem.focus();
+
+    const range = document.createRange();
+    const selection = window.getSelection();
+    const { childNodes } = lineEditorElem;
+    const lastChildNode = childNodes && childNodes.length - 1;
+
+    range.selectNodeContents(lastChildNode === -1 ? lineEditorElem : childNodes[lastChildNode]);
+    range.collapse(false);
+
+    selection.removeAllRanges();
+    selection.addRange(range);
+}
 
 /**
- * @type {Set<Application>}
+ * @param {string} line
  */
-const applications = new Set();
-let focusedWindow = 0;
-let currentBgUrl = '';
+function tabComplete(line, cursorPos) {
+    console.log(line);
+    const args = parseLine(line);
+    let argIndex = 0;
 
-if(localStorage.getItem('desktop-bg'))
-{
-    desktop.style.backgroundImage = `url('${localStorage.getItem('desktop-bg')}')`;
-}
-
-function openContextMenu(x, y)
-{
-    const contextMenu = new ContextMenu(
-    [
-        {
-            label: 'Set Desktop Background',
-            action()
-            {
-                const fileInput = document.createElement('input');
-                fileInput.type = 'file';
-                fileInput.accept = 'image/*';
-                fileInput.style.display = 'none';
-
-                document.body.appendChild(fileInput);
-
-                fileInput.click();
-                fileInput.addEventListener('input', () =>
-                {
-                    const image = fileInput.files[0];
-                    const reader = new FileReader();
-                    
-                    reader.readAsDataURL(image);
-                    
-                    reader.addEventListener('load', () =>
-                    {
-                        desktop.style.backgroundImage = `url('${reader.result}')`;
-                        localStorage.setItem('desktop-bg', reader.result);
-                    });
-                });
-                fileInput.remove();
-
+    if (args.length <= 1) {
+        argIndex = 0;
+    }
+    else {
+        for (let i = 0; i < cursorPos; i++) {
+            console.log(line.charAt(i), cursorPos);
+            if (line.charAt(i) == " ") {
+                argIndex++;
             }
-        },
-        {
-            label: 'Set Random Background',
-            action: setRandomBg
-        },
-        {
-            label: 'Refresh',
-            action: createDesktopIcons
         }
-    ], { x, y });
+    }
 
-    document.querySelector('context-menu')?.remove?.();
-    document.body.appendChild(contextMenu);
+    let arg = args[argIndex].trim();
+    let options = [];
+
+    if (argIndex == 0) {
+        options = Object.keys(commands).filter(command => command.startsWith(arg));
+        console.log("Completing command");
+    }
+    else {
+        options = state.workdir.contents.map(obj => obj.name).filter(obj => obj.startsWith(args[argIndex]));
+        console.log("Completing arg", arg);
+    }
+    if (options.len == 0) return;
+
+    if (options.length == 1) {
+        document.execCommand("insertText", false, options[0].slice(arg.length) + " ");
+    }
+    else {
+        echo(JSON.stringify(options) + "\n")
+    }
+
+    focusAndMoveCursorToTheEnd();
 }
 
-desktop.addEventListener('contextmenu', e =>
-{
-    e.preventDefault();
-    openContextMenu(e.clientX, e.clientY);
-});
-
-btnStartMenu.addEventListener('click', () =>
-{
-    if(!menuElem.classList.contains('show'))
-    {
-        menuElem.classList.add('show');
-        menuElem.focus();
-        document.addEventListener('click', e =>
-        {
-            if(e.target == menuElem || e.target == btnStartMenu) return;
-            
-            if(menuElem.classList.contains('show'))
-            {
-                menuElem.classList.remove('show');
+lineEditorElem.addEventListener("keydown", e => {
+    switch (e.key) {
+        case "Enter":
+            e.preventDefault();
+            runCommand(lineEditorElem.textContent);
+            break;
+        case "ArrowUp":
+            e.preventDefault();
+            if (history_index > 0) {
+                history_index--;
+                lineEditorElem.innerText = history[history_index];
+                focusAndMoveCursorToTheEnd();
             }
-        });
+            break;
+        case "ArrowDown":
+            e.preventDefault();
+            if (history_index < history.length) {
+                history_index++;
+                lineEditorElem.innerText = history[history_index] || "";
+                focusAndMoveCursorToTheEnd();
+            }
+            break;
+        case "Tab":
+            e.preventDefault();
+            tabComplete(lineEditorElem.textContent, document.getSelection().anchorOffset);
+            break;
     }
-    else
-    {
-        menuElem.classList.remove('show');
-    }
-});
 
-btnRestart.addEventListener('click', () => location.reload());
-btnShutdown.addEventListener('click', () => window.close());
-
-let consoleApp = new Application('Console', 'A basic console that logs', './apps/console/icon.svg', './apps/console/');
-applications.add(consoleApp);
-
-applications.add(new Application('Notepad', 'A basic notepad', './apps/notepad/icon.svg', './apps/notepad'));
-applications.add(new Application('Browser', 'A basic web browser', './apps/browser/icon.svg', './apps/browser'));
-applications.add(new Application('Paint', 'A basic painting app', './apps/paint/icon.ico', './apps/paint'));
-applications.add(new Application('Debug', 'Debug app', './apps/debug/icon.svg', './apps/debug'));
-
-applications.add(new Application('MightyCoderX', 'My website', 'https://old.mightycoderx.dev/favicon.svg', 'https://old.mightycoderx.dev'));
-applications.add(new Application('MightyOS', 'this', 'https://mightycoderx.github.io/favicon.ico', './'));
-// applications.add(new Application('LAN-Chat', 'My LAN Chat', 'https://mcx-lan-chat.herokuapp.com/img/icon.svg', 'https://mcx-lan-chat.herokuapp.com'));
-applications.add(new Application('MusicMaker', 'Play Music and record it!', 'https://mightycoderx.github.io/MusicMaker/icon.svg', 'https://mightycoderx.github.io/MusicMaker/'));
-
-document.addEventListener('openwindow', e =>
-{
-    applications.forEach(app =>
-    {
-        if(app.name == e.detail.appName && !app.window)
-        {   
-            app.createWindow(panelApps, windowOverlay);
+    if (e.ctrlKey) {
+        switch (e.key) {
+            case "l":
+                e.preventDefault();
+                clear();
+                break;
+            case "a":
+                e.preventDefault();
+                break;
+            case "e":
+                e.preventDefault();
+                break;
         }
-    });   
+    }
+
 });
 
-document.addEventListener('windowshallfocus', e =>
-{
-    [...applications].filter(app => app.window).map(app => app.window).forEach(w =>
-    {
-        w.unfocus();
-    });
+lineEditorElem.addEventListener("keyup", e => {
+    if (e.key == "Enter") {
+        e.preventDefault();
+    }
+
+    if (e.key == "Tab") {
+        e.preventDefault();
+    }
 });
 
-document.addEventListener('toggleminimize', e =>
-{
-    applications.forEach(app =>
-    {
-        if(app.name == e.detail.appName)
-        {
-            app.window.minimize();
-            return;
-        }
-    });
-});
-
-
-function createDesktopIcons()
-{
-    desktop.innerHTML = '';
-    for(let app of applications)
-    {
-        //TODO use the constructor of DesktopIcon instead
-        let desktopIcon = new DesktopIcon();
-        desktopIcon.setAttribute('icon-src', app.iconSrc);
-        desktopIcon.setAttribute('label', app.name);
-        desktopIcon.setAttribute('app-name', app.name);
-        desktopIcon.setAttribute('title', app.desc);
-        desktop.appendChild(desktopIcon);
-    }
-}
-
-function createStartMenuItems()
-{
-    const startMenuAppList = menuElem.querySelector('.app-list');
-    for(let app of applications)
-    {
-        let startMenuItem = new StartMenuItem();
-        startMenuItem.setAttribute('app-name', app.name);
-        startMenuItem.setAttribute('icon-src', app.iconSrc);
-        startMenuAppList.appendChild(startMenuItem);
-    }
-}
-
-createDesktopIcons();
-createStartMenuItems();
-
-if(!localStorage.getItem('desktop-bg')) setRandomBg();
-async function setRandomBg()
-{
-    const { width, height } = screen;
-    const trueWidth = width*devicePixelRatio;
-    const trueHeight = height*devicePixelRatio;
-
-    const res = await fetch(`https://source.unsplash.com/random/${trueWidth}x${trueHeight}?nature`);
-
-    desktop.style.backgroundImage = `url(${res.url})`;
-
-    currentBgUrl = res.url;
-    
-    //TODO make saving desktop bg optional
-    try
-    {
-        localStorage.setItem('desktop-bg', res.url);
-    }
-    catch(err)
-    {
-        if(err.name === 'QuotaExceededError')
-        {
-            console.warn('Couldn\'t save desktop background, the url is too big for localStorage (How?)');
-            return;
-        }
-
-        console.dir(err);
-    }
-}

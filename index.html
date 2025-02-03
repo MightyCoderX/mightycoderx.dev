@@ -4,45 +4,32 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        
-        <link rel="icon" href="./favicon.png">
-        <title>MightyOS</title>
+
+        <link rel="icon" href="favicon.svg">
+        <title>mightycoderx.dev</title>
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Round">
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="style.css">
 
-        <script src="main.js" defer type="module"></script>
-        <script src="components/ConsoleContext.js" defer></script>
+        <script src="main.js" type="module"></script>
     </head>
     <body>
-        <div class="desktop"></div>
-        <div class="window-overlay"></div>
-        <!-- TODO make panel a web component -->
-        <div class="panel">
-            <div class="start-menu">
-                <button id="btnStartMenu"><img src="start_menu_icon.svg" alt="Menu"></button>
-                <div class="menu" tabindex="-1">
-                    <aside>
-                        <button id="btnShutdown" title="Shutdown">
-                            <span class="material-icons-round">power_settings_new</span>
-                        </button>
-                        <button id="btnRestart" title="Restart">
-                            <span class="material-icons-round">restart_alt</span>
-                        </button>
-                    </aside>
-                    <div class="app-list">
-                        <!-- <h3>Applications</h3> -->
-                    </div>
-                </div>
-            </div>
-            <div class="panel-apps"></div>
-            <div class="panel-right">
-                <button id="clock"></button>
-            </div>
+        <div class="terminal" id="terminal">
+ __  __ _       _     _          ____          _         __  __
+|  \/  (_) __ _| |__ | |_ _   _ / ___|___   __| | ___ _ _\ \/ /
+| |\/| | |/ _` | '_ \| __| | | | |   / _ \ / _` |/ _ \ '__\  / 
+| |  | | | (_| | | | | |_| |_| | |__| (_) | (_| |  __/ |  /  \ 
+|_|  |_|_|\__, |_| |_|\__|\__, |\____\___/ \__,_|\___|_| /_/\_\
+          |___/           |___/
+
+</div>
+        <div class="cli" id="cli">
+            <span class="prompt" id="prompt">~ $ </span>
+            <span class="line-editor" id="lineEditor" value="" autofocus contenteditable></span>
         </div>
     </body>
 </html>

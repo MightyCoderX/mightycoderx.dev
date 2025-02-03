@@ -1,0 +1,39 @@
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: white;
+    font-family: monospace;
+    font-size: 1rem;
+}
+
+html, body {
+    background-color: #000;
+    width: 100vw;
+}
+
+body {
+    padding: 1rem;
+}
+
+.terminal {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    width: 100%;
+}
+
+.cli {
+    display: flex;
+
+    & .prompt {
+        display: block;
+        white-space: pre;
+    }
+
+    & .line-editor {
+        outline: none;
+        display: inline-block;
+        white-space: pre-wrap;
+        width: 100%;
+    }
+}
