@@ -29,8 +29,18 @@ export const fs = {
             name: "skills",
             contents: [
                 {
-                    name: "",
-                    contents: ""
+                    name: "inner",
+                    contents: [
+                        {
+                            name: "innerer",
+                            contents: [
+                                {
+                                    name: "innerest",
+                                    contents: []
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         }
