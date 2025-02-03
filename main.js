@@ -147,6 +147,7 @@ function parseLine(line, trim = false) {
 
     return args;
 }
+
 /***
  * @param {string} line 
  */
@@ -195,6 +196,7 @@ function focusAndMoveCursorToTheEnd() {
     selection.addRange(range);
 }
 
+/***
  * @param {string} line
  */
 function tabComplete(line, cursorPos) {
