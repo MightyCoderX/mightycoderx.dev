@@ -1,4 +1,6 @@
-import { fs, state, terminalElem, commands, echo } from "./main.js";
+import { state, terminalElem } from "../index.js";
+import { commands } from "./shell.js";
+import { fs, isDirectory, getFsObject } from "./fs.js";
 
 export function help(args) {
     let helpMessage = "";
@@ -8,7 +10,7 @@ export function help(args) {
         }
     }
     else if (args.length == 1) {
-        if(commands[args[0]]) {
+        if (commands[args[0]]) {
             helpMessage = `usage: ${args[0]} ${commands[args[0]]?.usage}\n`;
         }
         else {
@@ -23,30 +25,16 @@ export function clear() {
     terminalElem.innerHTML = "";
 }
 
-export function isDirectory(obj) {
-    return Array.isArray(obj.contents);
-}
-
-/***
- * @param {string} name
- * @returns {{ name: string, contents: [] | string} | null}
- */
-function getFsObjectByName(name) {
-    const match = state.workdir.contents.find(obj => obj.name === name);
-    if (!match) {
-        commands.echo.run(`error: '${name}' no such file or directory`);
-        return null;
-    }
-
-    return match;
-}
-
 export function ls(args) {
     let contents = state.workdir.contents;
 
-    if (args.length == 1) {
-        const obj = getFsObjectByName(args[0]);
-        if (!obj) return;
+    if (args.length == 1 && args[0]) {
+        const path = args[0];
+        const obj = getFsObject(path);
+        if (!obj) {
+            commands.echo.run(`error: '${path}' no such file or directory`);
+            return;
+        }
 
         if (!isDirectory(obj)) {
             commands.echo.run(`${obj.name}`);
@@ -63,17 +51,23 @@ export function ls(args) {
 
 export function cd(args) {
     if (args.length == 0) {
-        state.workdir = "~";
+        state.workdir = getFsObject("~");
         return;
     }
-    const obj = getFsObjectByName(args[0]);
-    if (!obj) return;
+
+    const path = `${state.workdir.path}/${args[0]}`;
+
+    const obj = getFsObject(path);
+    if (!obj) {
+        commands.echo.run(`error: '${path}' no such file or directory`);
+        return;
+    }
 
     if (isDirectory(obj)) {
-        state.workdir = args[0];
+        state.workdir = obj;
     }
     else {
-        commands.echo.run(`cd: cannot cd into a file`);
+        commands.echo.run(`cd: '${obj.path}' is a file`);
     }
 }
 
@@ -83,8 +77,15 @@ export function cat(args) {
         return;
     }
 
-    const obj = getFsObjectByName(args[0]);
-    if(!obj) return;
+    const path = args[0];
+
+    const obj = getFsObject(path);
+
+    if (!obj) {
+        commands.echo.run(`error: '${path}' no such file or directory`);
+        return;
+    }
+
 
     if (!isDirectory(obj)) {
         commands.echo.run(obj.contents);
