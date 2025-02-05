@@ -12,7 +12,7 @@ export function echo(text) {
     terminalElem.innerHTML += text;
 }
 
-document.addEventListener("click", e => lineEditorElem.focus());
+document.addEventListener("click", _ => lineEditorElem.focus());
 export const fs = {
     name: "~",
     contents: [
